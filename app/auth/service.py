@@ -7,8 +7,8 @@ class AuthService:
 
     @staticmethod
     def login(data):
-        email = data['email']
-        password = data['password']
+        email = data.get('email')
+        password = data.get('password')
 
         user = User.query.filter_by(email=email).first()
 
@@ -41,7 +41,7 @@ class AuthService:
             db.session.commit()
             return {
                 'message': 'User created successfully'
-            }
+            } , 201
 
 
 
