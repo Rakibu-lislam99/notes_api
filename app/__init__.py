@@ -1,7 +1,7 @@
 from flask import Flask
 from . import config
 from .extensions import db
-
+from .auth.routes import auth_bp
 
 
 def create_app(testing=False):
@@ -13,11 +13,7 @@ def create_app(testing=False):
     if testing:
         app.config['TESTING'] = True
 
-    @app.route('/' , methods=['GET'])      # basic route
-    def index():
-        return {
-            'message' : 'Hello World!'
-        } , 200
+    app.register_blueprint(auth_bp , url_prefix='/auth')
 
     with app.app_context():
         db.create_all()
