@@ -1,6 +1,6 @@
 from flask import Flask
 from . import config
-from .extensions import db
+from .extensions import db , jwt
 from .auth.routes import auth_bp
 from app.errors.error_handlers import register_error_handlers
 
@@ -9,6 +9,7 @@ def create_app(testing=False):
     app.config.from_object(config.Config)     # app configuration
 
     db.init_app(app)                         # database initialization
+    jwt.init_app(app)
 
     if testing:
         app.config['TESTING'] = True

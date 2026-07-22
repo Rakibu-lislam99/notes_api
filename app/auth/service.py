@@ -1,6 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.models import User
 from app.models.models import db
+from flask_jwt_extended import create_access_token
+
+
 
 class AuthService:
 
@@ -14,7 +17,11 @@ class AuthService:
 
         if user:
             if check_password_hash(user.password, password):
-                return {'message': 'Login Successfully'}, 200
+                token = create_access_token(identity=user.id)
+                return {
+                    'message': 'Login Successfully',
+                    'access_token' : token
+                    }, 200
             return {"message": 'Invalid Credentials'}, 401
         else:
             return {'message': 'No user found'}, 401
@@ -43,7 +50,20 @@ class AuthService:
                 'message': 'User created successfully'
             } , 201
 
-
+    @staticmethod
+    def profile(data):
+        user_id = data.get('user_id')
+        user = User.query.filter_by(id=user_id).first()
+        if user:
+            return {
+                'message' : 'User found' ,
+                'user_id' : user.id ,
+                'email' : user.email,
+                'username' : user.username
+            }
+        return {
+            'message' : 'User not found'
+        }
 
 
 
