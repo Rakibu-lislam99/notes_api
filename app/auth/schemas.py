@@ -33,7 +33,7 @@ class LoginSchema(Schema):
     )
 
 
-class RegistrationSchema(Schema):
+class RegisterSchema(Schema):
 
     email = fields.Email(
         required=True,

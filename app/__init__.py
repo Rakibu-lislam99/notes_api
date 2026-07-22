@@ -2,7 +2,7 @@ from flask import Flask
 from . import config
 from .extensions import db
 from .auth.routes import auth_bp
-
+from app.errors.error_handlers import register_error_handlers
 
 def create_app(testing=False):
     app = Flask(__name__)                     # create flask app
@@ -14,6 +14,9 @@ def create_app(testing=False):
         app.config['TESTING'] = True
 
     app.register_blueprint(auth_bp , url_prefix='/auth')
+
+    register_error_handlers(app)
+
 
     with app.app_context():
         db.create_all()

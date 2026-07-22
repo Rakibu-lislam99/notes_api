@@ -1,8 +1,7 @@
 from flask import Blueprint , request
-from marshmallow import ValidationError
-
 from .service import AuthService
-from .schemas import RegistrationSchema , LoginSchema
+from .schemas import RegisterSchema , LoginSchema
+
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -12,10 +11,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login' , methods=['POST'])
 def login():
     schema = LoginSchema()
-    try:
-        data = schema.load(request.get_json())
-    except ValidationError as err:
-        return err.messages,401
+    data = schema.load(request.get_json())
     return AuthService.login(data)
 
 
@@ -25,11 +21,8 @@ def logout():
 
 @auth_bp.route('/register'  , methods=['POST'])
 def register():
-    schema = RegistrationSchema()
-    try:
-        data = schema.load(request.get_json())
-    except ValidationError as err:
-        return err.messages,401
+    schema = RegisterSchema()
+    data = schema.load(request.get_json())
     return AuthService.register(data)
 
 
