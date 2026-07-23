@@ -1,6 +1,6 @@
 from flask import Flask
 from app import config
-from app.extensions import db , jwt
+from app.extensions import db , jwt , migrate
 from app.auth.routes import auth_bp
 from app.errors.error_handlers import register_error_handlers
 
@@ -14,7 +14,7 @@ def create_app(testing=False):
 
     db.init_app(app)                         # database initialization
     jwt.init_app(app)
-
+    migrate.init_app(app, db)
 
     app.register_blueprint(auth_bp , url_prefix='/auth')
 
