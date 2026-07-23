@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.user import User
 from app.extensions import db
 from flask_jwt_extended import create_access_token
-
+from flask import  current_app
 
 
 class AuthService:
@@ -23,6 +23,9 @@ class AuthService:
                     'access_token' : token
                     }, 200
             else:
+                current_app.logger.info(
+                    f"Invalid login attempt: {user.email}"
+                )
                 return {"message": 'Invalid Credentials'}, 401
         else:
             return {'message': 'No user found'}, 401
@@ -36,6 +39,9 @@ class AuthService:
 
         user = User.query.filter_by(email=email).first()
         if user:
+            current_app.logger.info(
+                f"Duplicate registration attempt: {user.email}"
+            )
             return {
                 'message': 'Invalid Credentials'
             }, 409
@@ -47,6 +53,9 @@ class AuthService:
             )
             db.session.add(user)
             db.session.commit()
+            current_app.logger.info(
+                f"New user created: {user.email}"
+            )
             return {
                 'message': 'User created successfully'
             } , 201
